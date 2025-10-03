@@ -1,454 +1,42 @@
 // Válvulas
-const container = document.getElementById("valvulasContainer");
-const exemplo = document.getElementById("valvulasExemplo");
-const toggle = document.getElementById("valvulasToggle");
-let expanded = false;
-if (container && exemplo && toggle) {
-  const header = container.querySelector(".rectangle-32");
-  header.onclick = function (e) {
-    expanded = !expanded;
-    if (expanded) {
-      exemplo.style.display = "block";
-      // Força reflow para garantir transição
-      void exemplo.offsetWidth;
-      exemplo.classList.add("show");
-      toggle.style.transform = "rotate(180deg)";
-    } else {
-      // Garante que a transição ocorra mesmo se display já for block
-      exemplo.classList.remove("show");
-      toggle.style.transform = "rotate(0deg)";
-      // Aguarda a transição para esconder
-      const handler = function (ev) {
-        if (ev.propertyName === "max-height") {
-          exemplo.style.display = "none";
-          exemplo.removeEventListener("transitionend", handler);
-        }
-      };
-      exemplo.addEventListener("transitionend", handler);
-      // Se a transição não disparar (por algum bug), força o display:none após o tempo da transição
-      setTimeout(() => {
-        if (!exemplo.classList.contains("show")) {
-          exemplo.style.display = "none";
-        }
-      }, 130); // ligeiramente maior que o transition do CSS
-    }
-    e.stopPropagation();
-  };
-}
 
-// Estação Meteorológica
-const estacaoContainer = document.getElementById("estacaoContainer");
-const estacaoExemplo = document.getElementById("estacaoExemplo");
-const estacaoToggle = document.getElementById("estacaoToggle");
-let estacaoExpanded = false;
-if (estacaoContainer && estacaoExemplo && estacaoToggle) {
-  // Mock para últimas 24h (hora a hora)
-  const weatherCardsData = {
-    "24h": [
-      {
-        title: "00h",
-        temp: 19,
-        min: 16,
-        max: 27,
-        umidade: 80,
-        vento: 8,
-        chuva: 0,
-      },
-      {
-        title: "03h",
-        temp: 18,
-        min: 16,
-        max: 27,
-        umidade: 82,
-        vento: 7,
-        chuva: 0,
-      },
-      {
-        title: "06h",
-        temp: 17,
-        min: 16,
-        max: 27,
-        umidade: 85,
-        vento: 6,
-        chuva: 0,
-      },
-      {
-        title: "09h",
-        temp: 20,
-        min: 16,
-        max: 27,
-        umidade: 70,
-        vento: 10,
-        chuva: 0,
-      },
-      {
-        title: "12h",
-        temp: 24,
-        min: 16,
-        max: 27,
-        umidade: 60,
-        vento: 12,
-        chuva: 0,
-      },
-      {
-        title: "15h",
-        temp: 27,
-        min: 16,
-        max: 27,
-        umidade: 55,
-        vento: 14,
-        chuva: 0,
-      },
-      {
-        title: "18h",
-        temp: 25,
-        min: 16,
-        max: 27,
-        umidade: 65,
-        vento: 11,
-        chuva: 0,
-      },
-      {
-        title: "21h",
-        temp: 22,
-        min: 16,
-        max: 27,
-        umidade: 75,
-        vento: 9,
-        chuva: 0,
-      },
-    ],
-    semana: [
-      {
-        title: "Seg",
-        temp: 27,
-        min: 16,
-        max: 27,
-        desc: "Ensolarado",
-        umidade: 60,
-        vento: 10,
-        chuva: 0,
-      },
-      {
-        title: "Ter",
-        temp: 22,
-        min: 16,
-        max: 27,
-        desc: "Nublado",
-        umidade: 65,
-        vento: 12,
-        chuva: 2,
-      },
-      {
-        title: "Qua",
-        temp: 28,
-        min: 16,
-        max: 27,
-        desc: "Sol",
-        umidade: 58,
-        vento: 11,
-        chuva: 0,
-      },
-      {
-        title: "Qui",
-        temp: 19,
-        min: 16,
-        max: 27,
-        desc: "Chuva",
-        umidade: 80,
-        vento: 8,
-        chuva: 10,
-      },
-      {
-        title: "Sex",
-        temp: 24,
-        min: 16,
-        max: 27,
-        desc: "Nublado",
-        umidade: 70,
-        vento: 9,
-        chuva: 1,
-      },
-      {
-        title: "Sáb",
-        temp: 25,
-        min: 16,
-        max: 27,
-        desc: "Sol",
-        umidade: 62,
-        vento: 10,
-        chuva: 0,
-      },
-      {
-        title: "Dom",
-        temp: 26,
-        min: 16,
-        max: 27,
-        desc: "Ensolarado",
-        umidade: 60,
-        vento: 8,
-        chuva: 0,
-      },
-    ],
-    mes: [
-      {
-        title: "01/06",
-        temp: 25,
-        min: 15,
-        max: 28,
-        desc: "Sol",
-        umidade: 60,
-        vento: 10,
-        chuva: 0,
-      },
-      {
-        title: "05/06",
-        temp: 23,
-        min: 14,
-        max: 27,
-        desc: "Nublado",
-        umidade: 65,
-        vento: 12,
-        chuva: 2,
-      },
-      {
-        title: "10/06",
-        temp: 21,
-        min: 13,
-        max: 26,
-        desc: "Chuva",
-        umidade: 80,
-        vento: 8,
-        chuva: 10,
-      },
-      {
-        title: "15/06",
-        temp: 27,
-        min: 16,
-        max: 29,
-        desc: "Ensolarado",
-        umidade: 58,
-        vento: 11,
-        chuva: 0,
-      },
-      {
-        title: "20/06",
-        temp: 28,
-        min: 17,
-        max: 30,
-        desc: "Sol",
-        umidade: 62,
-        vento: 10,
-        chuva: 0,
-      },
-      {
-        title: "25/06",
-        temp: 22,
-        min: 15,
-        max: 27,
-        desc: "Nublado",
-        umidade: 70,
-        vento: 9,
-        chuva: 1,
-      },
-      {
-        title: "30/06",
-        temp: 26,
-        min: 16,
-        max: 28,
-        desc: "Sol",
-        umidade: 60,
-        vento: 8,
-        chuva: 0,
-      },
-    ],
-  };
-
-  // Clima atual fixo (mock)
-  const climaAtual = {
-    temp: 27,
-    min: 16,
-    max: 27,
-    umidade: 74,
-    vento: 12,
-    chuva: 57,
-  };
-
-  function updateWeatherMain() {
-    document.getElementById("weatherTemp").textContent = climaAtual.temp;
-    document.getElementById("weatherMin").textContent = climaAtual.min;
-    document.getElementById("weatherMax").textContent = climaAtual.max;
-    document.getElementById("weatherHumidity").textContent =
-      climaAtual.umidade + "%";
-    document.getElementById("weatherWind").textContent =
-      climaAtual.vento + "km/h";
-    document.getElementById("weatherRain").textContent = climaAtual.chuva + "%";
-  }
-
-  // Remova o helper showWeatherCardsImmediate e ajuste o toggle para não ocultar/mostrar os cards manualmente
-  const header = estacaoContainer.querySelector(".rectangle-32");
-  header.onclick = function (e) {
-    estacaoExpanded = !estacaoExpanded;
-    if (estacaoExpanded) {
-      estacaoExemplo.style.display = "block";
-      void estacaoExemplo.offsetWidth;
-      estacaoExemplo.classList.add("show");
-      estacaoToggle.style.transform = "rotate(180deg)";
-    } else {
-      estacaoExemplo.classList.remove("show");
-      estacaoToggle.style.transform = "rotate(0deg)";
-      estacaoExemplo.addEventListener("transitionend", function handler(ev) {
-        if (ev.propertyName === "max-height") {
-          estacaoExemplo.style.display = "none";
-          estacaoExemplo.removeEventListener("transitionend", handler);
-        }
-      });
-    }
-    e.stopPropagation();
-  };
-
-  // Função auxiliar para retornar os dados das abas umidade, vento, chuva
-  function getCardsByTab(period, tab) {
-    const data = weatherCardsData[period] || [];
-    if (tab === "umidade") {
-      return data.map((d) => {
-        let label = "";
-        if (d.umidade < 30) {
-          label = "Muito baixa";
-        } else if (d.umidade < 60) {
-          label = "Baixa";
-        } else if (d.umidade < 80) {
-          label = "Moderada";
-        } else {
-          label = "Alta";
-        }
-        return {
-          title: d.title,
-          value: d.umidade + "%",
-          label: label,
-        };
-      });
-    }
-    if (tab === "vento") {
-      return data.map((d) => {
-        let label = "";
-        if (d.vento < 5) {
-          label = "Calmo";
-        } else if (d.vento < 15) {
-          label = "Moderado";
-        } else {
-          label = "Forte";
-        }
-        return {
-          title: d.title,
-          value: d.vento + " km/h",
-          label: label,
-        };
-      });
-    }
-    if (tab === "chuva") {
-      return data.map((d) => {
-        let label = "";
-        if (d.chuva === 0) {
-          label = "Sem chuva";
-        } else if (d.chuva < 5) {
-          label = "Pouca chuva";
-        } else if (d.chuva < 20) {
-          label = "Chuva moderada";
-        } else {
-          label = "Chuva intensa";
-        }
-        return {
-          title: d.title,
-          value: d.chuva + "mm",
-          label: label,
-        };
-      });
-    }
-    return [];
-  }
-
-  function renderWeatherCards(period, tab) {
-    const cards = document.getElementById("weatherCards");
-    if (!cards) return;
-    cards.innerHTML = "";
-    if (tab === "visao") {
-      if (period === "24h") {
-        // Um card por hora, mostrando temperatura daquele horário
-        (weatherCardsData["24h"] || []).forEach((item) => {
-          const card = document.createElement("div");
-          card.className = "weather-card";
-          card.innerHTML = `
-            <div class="weather-card-title">${item.title}</div>
-            <div class="weather-card-temp">${item.temp}°C</div>
-            <div class="weather-card-minmax">min ${item.min}°C<br>max ${item.max}°C</div>
-          `;
-          cards.appendChild(card);
-        });
-      } else {
-        // Um card por dia, mostrando média, min, max daquele dia
-        (weatherCardsData[period] || []).forEach((item) => {
-          const card = document.createElement("div");
-          card.className = "weather-card";
-          card.innerHTML = `
-            <div class="weather-card-title">${item.title}</div>
-            <div class="weather-card-temp">${item.temp}°C</div>
-            <div class="weather-card-minmax">min ${item.min}°C<br>max ${item.max}°C</div>
-          `;
-          cards.appendChild(card);
-        });
-      }
-    } else {
-      // Umidade, Vento, Chuva: mostra cards por hora/dia
-      const data = getCardsByTab(period, tab);
-      data.forEach((item) => {
-        const div = document.createElement("div");
-        div.className = "weather-card";
-        div.innerHTML = `
-          <div class="weather-card-title">${item.title}</div>
-          <div class="weather-card-temp">${item.value}</div>
-          <div class="weather-card-desc">${item.label}</div>
-        `;
-        cards.appendChild(div);
-      });
-    }
-    cards.style.display = cards.children.length > 0 ? "flex" : "";
-  }
-
-  let currentTab = "visao";
-  let currentPeriod = "24h";
-
-  function updateWeatherCards() {
-    renderWeatherCards(currentPeriod, currentTab);
-    updateWeatherMain();
-  }
-
-  // Dropdown de período
-  const weatherPeriod = document.getElementById("weatherPeriod");
-  if (weatherPeriod) {
-    weatherPeriod.addEventListener("change", function (e) {
-      currentPeriod = weatherPeriod.value;
-      updateWeatherCards();
-    });
-    currentPeriod = weatherPeriod.value;
-  }
-
-  // Abas
-  document.querySelectorAll(".weather-tab").forEach((btn) => {
-    btn.addEventListener("click", function (e) {
-      document
-        .querySelectorAll(".weather-tab")
-        .forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentTab = btn.getAttribute("data-tab");
-      updateWeatherCards();
-      e.stopPropagation();
-    });
-  });
-
-  // Inicializa
-  updateWeatherCards();
-}
+// Remover completamente o bloco de código responsável pelo dropdown das válvulas:
+// const container = document.getElementById("valvulasContainer");
+// const exemplo = document.getElementById("valvulasExemplo");
+// const toggle = document.getElementById("valvulasToggle");
+// let expanded = false;
+// if (container && exemplo && toggle) {
+//   const header = container.querySelector(".rectangle-32");
+//   header.onclick = function (e) {
+//     expanded = !expanded;
+//     if (expanded) {
+//       exemplo.style.display = "block";
+//       // Força reflow para garantir transição
+//       void exemplo.offsetWidth;
+//       exemplo.classList.add("show");
+//       toggle.style.transform = "rotate(180deg)";
+//     } else {
+//       // Garante que a transição ocorra mesmo se display já for block
+//       exemplo.classList.remove("show");
+//       toggle.style.transform = "rotate(0deg)";
+//       // Aguarda a transição para esconder
+//       const handler = function (ev) {
+//         if (ev.propertyName === "max-height") {
+//           exemplo.style.display = "none";
+//           exemplo.removeEventListener("transitionend", handler);
+//         }
+//       };
+//       exemplo.addEventListener("transitionend", handler);
+//       // Se a transição não disparar (por algum bug), força o display:none após o tempo da transição
+//       setTimeout(() => {
+//         if (!exemplo.classList.contains("show")) {
+//           exemplo.style.display = "none";
+//         }
+//       }, 130); // ligeiramente maior que o transition do CSS
+//     }
+//     e.stopPropagation();
+//   };
+// }
 
 // Controle das válvulas
 let valvulaCount = 0;
@@ -457,12 +45,12 @@ let valvulas = []; // Lista local de válvulas
 function renderValvulas() {
   const assets = document.getElementById("valvulasAssets");
   if (!assets) return;
-  // Remove linhas antigas e válvulas antigas, mas NÃO remove o addValvulaBox
+  // Remove linhas antigas e válvulas antigas
   Array.from(assets.querySelectorAll(".valvulas-row")).forEach((r) =>
-    r.remove(),
+    r.remove()
   );
   Array.from(assets.querySelectorAll(".valvula-box")).forEach((b) =>
-    b.remove(),
+    b.remove()
   );
 
   // Cria os elementos das válvulas a partir da lista
@@ -471,10 +59,23 @@ function renderValvulas() {
     box.className = "valvula-box";
     box.id = "valvula" + valvula.id;
     box.innerHTML = `
-      <div class="valvula-label" data-id="${valvula.id}" style="cursor:pointer;">${valvula.nome} (${valvula.serial})</div>
-      <div class="status" id="statusValvula${valvula.id}">${valvula.ativada ? "Ativada" : "Desativada"}</div>
-      <img class="mdi-valve" id="imgValvula${valvula.id}" src="static/img/${valvula.ativada ? "mdi--valve-open.svg" : "mdi--valve.svg"}" alt="${valvula.ativada ? "valvulaAberta" : "valvulaFechada"}"/>
-      <button class="toggle-btn ${valvula.ativada ? "ativada" : "desativada"}" id="btnValvula${valvula.id}">${valvula.ativada ? "Desativar" : "Ativar"}</button>
+      <div class="valvula-label" data-id="${
+        valvula.id
+      }" style="cursor:pointer;">${valvula.nome} (${valvula.serial})</div>
+      <div class="status" id="statusValvula${valvula.id}">${
+      valvula.ativada ? "Ativada" : "Desativada"
+    }</div>
+      <img class="mdi-valve-closed" id="imgValvula${
+        valvula.id
+      }Closed" src="/src/static/img/${"mdi--valve.svg"}" alt="${"valvulaFechada"}"/>
+      <img class="mdi-valve-open" id="imgValvula${
+        valvula.id
+      }Open" src="/src/static/img/${"mdi--valve-open.svg"}" alt="${"valvulaAberta"}"/>
+      <button class="toggle-btn ${
+        valvula.ativada ? "ativada" : "desativada"
+      }" id="btnValvula${valvula.id}">${
+      valvula.ativada ? "Desativar" : "Ativar"
+    }</button>
     `;
     return box;
   });
@@ -502,12 +103,9 @@ function renderValvulas() {
     rows.push(row);
   }
 
-  // Insere as linhas (sempre após o addValvulaBox, mantendo a ordem correta)
-  const addBox = document.getElementById("addValvulaBox");
-  let nextSibling = addBox.nextSibling;
+  // Insere as linhas
   rows.forEach((r) => {
-    assets.insertBefore(r, nextSibling);
-    nextSibling = r.nextSibling;
+    assets.appendChild(r);
   });
 
   // Setup eventos
@@ -516,19 +114,14 @@ function renderValvulas() {
     setupValvula(valvula.id);
     setupValvulaLabel(b.querySelector(".valvula-label"));
   });
-
-  // Ajusta rolagem
-  if (valvulasExemplo) {
-    valvulasExemplo.style.maxHeight = "600px";
-    valvulasExemplo.style.overflowY = "auto";
-  }
 }
 
 function setupValvula(id) {
   const btn = document.getElementById("btnValvula" + id);
-  const img = document.getElementById("imgValvula" + id);
+  const img_open = document.getElementById("imgValvula" + id + "Open");
+  const img_closed = document.getElementById("imgValvula" + id + "Closed");
   const status = document.getElementById("statusValvula" + id);
-  if (!btn || !img || !status) return;
+  if (!btn || !img_open || !img_closed || !status) return;
 
   btn.onclick = null;
 
@@ -538,7 +131,6 @@ function setupValvula(id) {
 
   function updateUI() {
     if (valvula.ativada) {
-      img.src = "static/img/mdi--valve-open.svg";
       status.textContent = "Ativada";
       status.classList.add("ativada");
       status.classList.remove("desativada");
@@ -546,7 +138,6 @@ function setupValvula(id) {
       btn.classList.add("ativada");
       btn.classList.remove("desativada");
     } else {
-      img.src = "static/img/mdi--valve.svg";
       status.textContent = "Desativada";
       status.classList.remove("ativada");
       status.classList.add("desativada");
@@ -559,31 +150,16 @@ function setupValvula(id) {
   updateUI();
 
   btn.onclick = function () {
-    img.classList.remove(
-      "valve-rotate-in",
-      "valve-rotate-out",
-      "valve-rotate-in-reverse",
-      "valve-rotate-out-reverse",
-    );
-    if (!valvula.ativada) {
-      img.classList.add("valve-rotate-in");
-      setTimeout(() => {
-        valvula.ativada = true;
-        updateUI();
-        img.classList.remove("valve-rotate-in");
-        img.classList.add("valve-rotate-out");
-        setTimeout(() => img.classList.remove("valve-rotate-out"), 300);
-      }, 150);
-    } else {
-      img.classList.add("valve-rotate-in-reverse");
-      setTimeout(() => {
-        valvula.ativada = false;
-        updateUI();
-        img.classList.remove("valve-rotate-in-reverse");
-        img.classList.add("valve-rotate-out-reverse");
-        setTimeout(() => img.classList.remove("valve-rotate-out-reverse"), 300);
-      }, 150);
+    const container = btn.closest(".valvula-box");
+    if (container) {
+      if (!valvula.ativada) {
+        container.classList.add("show-image");
+      } else {
+        container.classList.remove("show-image");
+      }
     }
+    valvula.ativada = !valvula.ativada;
+    updateUI();
   };
 }
 
@@ -657,7 +233,7 @@ function showAddValvulaModal(onAdd) {
           <div style="width:100%;margin-bottom:16px;">
             <label style="font-family:'Nexa-Heavy',sans-serif;font-size:16px;display:block;margin-bottom:6px;">Nome</label>
             <input id="addValvulaNome" type="text" style="width:100%;padding:8px 12px;font-size:16px;border-radius:6px;border:1px solid #bbb;margin-bottom:12px;">
-            <label style="font-family:'Nexa-Heavy',sans-serif;font-size:16px;display:block;margin-bottom:6px;">Número Serial</label>
+            <label style="font-family:'Nexa-Heavy',sans-serif;font-size:16px;display:block;margin-bottom:6px;">localização</label>
             <input id="addValvulaSerial" type="text" style="width:100%;padding:8px 12px;font-size:16px;border-radius:6px;border:1px solid #bbb;">
           </div>
           <div class="custom-modal-actions">
@@ -781,14 +357,14 @@ function showValvulaEdit(box, label) {
   saveBtn.className = "icon-btn save-btn";
   saveBtn.title = "Salvar";
   saveBtn.style.marginLeft = "8px";
-  saveBtn.innerHTML = `<img src="static/img/edit-outline.svg" alt="Salvar" style="width:22px;height:22px;">`;
+  saveBtn.innerHTML = `<img src="/src/static/img/edit-outline.svg" alt="Salvar" style="width:22px;height:22px;">`;
 
   // Botão cancelar (ícone)
   const cancelBtn = document.createElement("button");
   cancelBtn.className = "icon-btn cancel-btn";
   cancelBtn.title = "Cancelar";
   cancelBtn.style.marginLeft = "4px";
-  cancelBtn.innerHTML = `<img src="static/img/close.svg" alt="Cancelar" style="width:22px;height:22px;">`;
+  cancelBtn.innerHTML = `<img src="/src/static/img/close.svg" alt="Cancelar" style="width:22px;height:22px;">`;
 
   // Substitui label
   label.style.display = "none";
@@ -851,7 +427,7 @@ function updateValvulasLayout() {
   if (!assets) return;
   // Remove agrupamentos antigos
   Array.from(assets.querySelectorAll(".valvulas-row")).forEach((r) =>
-    r.remove(),
+    r.remove()
   );
   // Seleciona todas as válvulas (exclui o botão de adicionar)
   const boxes = Array.from(assets.querySelectorAll(".valvula-box"));
@@ -870,23 +446,13 @@ function updateValvulasLayout() {
     rows.push(row);
   }
   // Insere as linhas antes do botão de adicionar
-  const addBox = document.getElementById("addValvulaBox");
-  rows.forEach((r) => assets.insertBefore(r, addBox));
+  rows.forEach((r) => assets.appendChild(r));
   // Reatribui eventos para cada válvula
   boxes.forEach((b) => {
     const id = b.id.replace("valvula", "");
     setupValvula(id);
     setupValvulaLabel(b.querySelector(".valvula-label"));
   });
-  // Se <=5, remove rolagem
-  const valvulasExemplo = document.getElementById("valvulasExemplo");
-  if (boxes.length > 5) {
-    valvulasExemplo.style.maxHeight = "600px";
-    valvulasExemplo.style.overflowY = "auto";
-  } else {
-    valvulasExemplo.style.maxHeight = "";
-    valvulasExemplo.style.overflowY = "";
-  }
 }
 updateValvulasLayout();
 
@@ -906,11 +472,11 @@ function showValvulaActions(label) {
   menu.innerHTML = `
     <div class="edit rectangle-36" style="cursor:pointer; left:0;">
       <div class="mingcute-edit-line">
-        <img class="group" src="static/img/edit-outline.svg" alt="editar"/>
+        <img class="group" src="/src/static/img/edit-outline.svg" alt="editar"/>
       </div>
     </div>
     <div class="delete rectangle-37" style="cursor:pointer; right:0;">
-      <img class="material-symbols-delete-outline" src="static/img/delete-outline.svg" alt="excluir"/>
+      <img class="material-symbols-delete-outline" src="/src/static/img/delete-outline.svg" alt="excluir"/>
     </div>
   `;
   box.appendChild(menu);
@@ -968,4 +534,431 @@ document.querySelectorAll(".valvula-box").forEach((box) => {
     });
   }
 });
+renderValvulas();
+
+// Estação Meteorológica
+const estacaoContainer = document.getElementById("estacaoContainer");
+const estacaoExemplo = document.getElementById("estacaoExemplo");
+
+// Mock para últimas 24h (hora a hora)
+const weatherCardsData = {
+  "24h": [
+    {
+      title: "00h",
+      temp: 19,
+      min: 16,
+      max: 27,
+      umidade: 80,
+      vento: 8,
+      chuva: 0,
+    },
+    {
+      title: "03h",
+      temp: 18,
+      min: 16,
+      max: 27,
+      umidade: 82,
+      vento: 7,
+      chuva: 0,
+    },
+    {
+      title: "06h",
+      temp: 17,
+      min: 16,
+      max: 27,
+      umidade: 85,
+      vento: 6,
+      chuva: 0,
+    },
+    {
+      title: "09h",
+      temp: 20,
+      min: 16,
+      max: 27,
+      umidade: 70,
+      vento: 10,
+      chuva: 0,
+    },
+    {
+      title: "12h",
+      temp: 24,
+      min: 16,
+      max: 27,
+      umidade: 60,
+      vento: 12,
+      chuva: 0,
+    },
+    {
+      title: "15h",
+      temp: 27,
+      min: 16,
+      max: 27,
+      umidade: 55,
+      vento: 14,
+      chuva: 0,
+    },
+    {
+      title: "18h",
+      temp: 25,
+      min: 16,
+      max: 27,
+      umidade: 65,
+      vento: 11,
+      chuva: 0,
+    },
+    {
+      title: "21h",
+      temp: 22,
+      min: 16,
+      max: 27,
+      umidade: 75,
+      vento: 9,
+      chuva: 0,
+    },
+  ],
+  semana: [
+    {
+      title: "Seg",
+      temp: 27,
+      min: 16,
+      max: 27,
+      desc: "Ensolarado",
+      umidade: 60,
+      vento: 10,
+      chuva: 0,
+    },
+    {
+      title: "Ter",
+      temp: 22,
+      min: 16,
+      max: 27,
+      desc: "Nublado",
+      umidade: 65,
+      vento: 12,
+      chuva: 2,
+    },
+    {
+      title: "Qua",
+      temp: 28,
+      min: 16,
+      max: 27,
+      desc: "Sol",
+      umidade: 58,
+      vento: 11,
+      chuva: 0,
+    },
+    {
+      title: "Qui",
+      temp: 19,
+      min: 16,
+      max: 27,
+      desc: "Chuva",
+      umidade: 80,
+      vento: 8,
+      chuva: 10,
+    },
+    {
+      title: "Sex",
+      temp: 24,
+      min: 16,
+      max: 27,
+      desc: "Nublado",
+      umidade: 70,
+      vento: 9,
+      chuva: 1,
+    },
+    {
+      title: "Sáb",
+      temp: 25,
+      min: 16,
+      max: 27,
+      desc: "Sol",
+      umidade: 62,
+      vento: 10,
+      chuva: 0,
+    },
+    {
+      title: "Dom",
+      temp: 26,
+      min: 16,
+      max: 27,
+      desc: "Ensolarado",
+      umidade: 60,
+      vento: 8,
+      chuva: 0,
+    },
+  ],
+  mes: [
+    {
+      title: "01/06",
+      temp: 25,
+      min: 15,
+      max: 28,
+      desc: "Sol",
+      umidade: 60,
+      vento: 10,
+      chuva: 0,
+    },
+    {
+      title: "05/06",
+      temp: 23,
+      min: 14,
+      max: 27,
+      desc: "Nublado",
+      umidade: 65,
+      vento: 12,
+      chuva: 2,
+    },
+    {
+      title: "10/06",
+      temp: 21,
+      min: 13,
+      max: 26,
+      desc: "Chuva",
+      umidade: 80,
+      vento: 8,
+      chuva: 10,
+    },
+    {
+      title: "15/06",
+      temp: 27,
+      min: 16,
+      max: 29,
+      desc: "Ensolarado",
+      umidade: 58,
+      vento: 11,
+      chuva: 0,
+    },
+    {
+      title: "20/06",
+      temp: 28,
+      min: 17,
+      max: 30,
+      desc: "Sol",
+      umidade: 62,
+      vento: 10,
+      chuva: 0,
+    },
+    {
+      title: "25/06",
+      temp: 22,
+      min: 15,
+      max: 27,
+      desc: "Nublado",
+      umidade: 70,
+      vento: 9,
+      chuva: 1,
+    },
+    {
+      title: "30/06",
+      temp: 26,
+      min: 16,
+      max: 28,
+      desc: "Sol",
+      umidade: 60,
+      vento: 8,
+      chuva: 0,
+    },
+  ],
+};
+
+// Clima atual fixo (mock)
+const climaAtual = {
+  temp: 27,
+  min: 16,
+  max: 27,
+  umidade: 74,
+  vento: 12,
+  chuva: 57,
+};
+
+function updateWeatherMain() {
+  document.getElementById("weatherTemp").textContent = climaAtual.temp;
+  document.getElementById("weatherMin").textContent = climaAtual.min;
+  document.getElementById("weatherMax").textContent = climaAtual.max;
+  document.getElementById("weatherHumidity").textContent =
+    climaAtual.umidade + "%";
+  document.getElementById("weatherWind").textContent =
+    climaAtual.vento + "km/h";
+  document.getElementById("weatherRain").textContent = climaAtual.chuva + "%";
+}
+
+// Remova o helper showWeatherCardsImmediate e ajuste o toggle para não ocultar/mostrar os cards manualmente
+const header = estacaoContainer.querySelector(".rectangle-32");
+header.onclick = function (e) {
+  estacaoExpanded = !estacaoExpanded;
+  if (estacaoExpanded) {
+    estacaoExemplo.style.display = "block";
+    void estacaoExemplo.offsetWidth;
+    estacaoExemplo.classList.add("show");
+    estacaoToggle.style.transform = "rotate(180deg)";
+  } else {
+    estacaoExemplo.classList.remove("show");
+    estacaoToggle.style.transform = "rotate(0deg)";
+    estacaoExemplo.addEventListener("transitionend", function handler(ev) {
+      if (ev.propertyName === "max-height") {
+        estacaoExemplo.style.display = "none";
+        estacaoExemplo.removeEventListener("transitionend", handler);
+      }
+    });
+  }
+  e.stopPropagation();
+};
+
+// Função auxiliar para retornar os dados das abas umidade, vento, chuva
+function getCardsByTab(period, tab) {
+  const data = weatherCardsData[period] || [];
+  if (tab === "umidade") {
+    return data.map((d) => {
+      let label = "";
+      if (d.umidade < 30) {
+        label = "Muito baixa";
+      } else if (d.umidade < 60) {
+        label = "Baixa";
+      } else if (d.umidade < 80) {
+        label = "Moderada";
+      } else {
+        label = "Alta";
+      }
+      return {
+        title: d.title,
+        value: d.umidade + "%",
+        label: label,
+      };
+    });
+  }
+  if (tab === "vento") {
+    return data.map((d) => {
+      let label = "";
+      if (d.vento < 5) {
+        label = "Calmo";
+      } else if (d.vento < 15) {
+        label = "Moderado";
+      } else {
+        label = "Forte";
+      }
+      return {
+        title: d.title,
+        value: d.vento + " km/h",
+        label: label,
+      };
+    });
+  }
+  if (tab === "chuva") {
+    return data.map((d) => {
+      let label = "";
+      if (d.chuva === 0) {
+        label = "Sem chuva";
+      } else if (d.chuva < 5) {
+        label = "Pouca chuva";
+      } else if (d.chuva < 20) {
+        label = "Chuva moderada";
+      } else {
+        label = "Chuva intensa";
+      }
+      return {
+        title: d.title,
+        value: d.chuva + "mm",
+        label: label,
+      };
+    });
+  }
+  return [];
+}
+
+function renderWeatherCards(period, tab) {
+  const cards = document.getElementById("weatherCards");
+  if (!cards) return;
+  cards.innerHTML = "";
+  if (tab === "visao") {
+    if (period === "24h") {
+      // Um card por hora, mostrando temperatura daquele horário
+      (weatherCardsData["24h"] || []).forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "weather-card";
+        card.innerHTML = `
+            <div class="weather-card-title">${item.title}</div>
+            <div class="weather-card-temp">${item.temp}°C</div>
+            <div class="weather-card-minmax">min ${item.min}°C<br>max ${item.max}°C</div>
+          `;
+        cards.appendChild(card);
+      });
+    } else {
+      // Um card por dia, mostrando média, min, max daquele dia
+      (weatherCardsData[period] || []).forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "weather-card";
+        card.innerHTML = `
+            <div class="weather-card-title">${item.title}</div>
+            <div class="weather-card-temp">${item.temp}°C</div>
+            <div class="weather-card-minmax">min ${item.min}°C<br>max ${item.max}°C</div>
+          `;
+        cards.appendChild(card);
+      });
+    }
+  } else {
+    // Umidade, Vento, Chuva: mostra cards por hora/dia
+    const data = getCardsByTab(period, tab);
+    data.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "weather-card";
+      div.innerHTML = `
+          <div class="weather-card-title">${item.title}</div>
+          <div class="weather-card-temp">${item.value}</div>
+          <div class="weather-card-desc">${item.label}</div>
+        `;
+      cards.appendChild(div);
+    });
+  }
+  cards.style.display = cards.children.length > 0 ? "flex" : "";
+}
+
+let currentTab = "visao";
+let currentPeriod = "24h";
+
+function updateWeatherCards() {
+  renderWeatherCards(currentPeriod, currentTab);
+  updateWeatherMain();
+}
+
+// Dropdown de período
+const weatherPeriod = document.getElementById("weatherPeriod");
+if (weatherPeriod) {
+  weatherPeriod.addEventListener("change", function (e) {
+    currentPeriod = weatherPeriod.value;
+    updateWeatherCards();
+  });
+  currentPeriod = weatherPeriod.value;
+}
+
+// Abas
+document.querySelectorAll(".weather-tab").forEach((btn) => {
+  btn.addEventListener("click", function (e) {
+    document
+      .querySelectorAll(".weather-tab")
+      .forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentTab = btn.getAttribute("data-tab");
+    updateWeatherCards();
+    e.stopPropagation();
+  });
+});
+
+// Inicializa
+updateWeatherCards();
+renderValvulas();
+document.querySelectorAll(".weather-tab").forEach((btn) => {
+  btn.addEventListener("click", function (e) {
+    document
+      .querySelectorAll(".weather-tab")
+      .forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentTab = btn.getAttribute("data-tab");
+    updateWeatherCards();
+    e.stopPropagation();
+  });
+});
+
+// Inicializa
+updateWeatherCards();
 renderValvulas();

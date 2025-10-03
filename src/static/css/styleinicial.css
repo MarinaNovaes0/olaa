@@ -31,7 +31,7 @@ body {
 
 @font-face {
   font-family: "Inria Sans Bold Local";
-  src: url("/static/fonts/inria-sans.bold.ttf") format("truetype");
+  src: url("/src/static/fonts/inria-sans.bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -39,7 +39,7 @@ body {
 
 @font-face {
   font-family: "Inria Sans Light Local";
-  src: url("/static/fonts/inria-sans.light.ttf") format("truetype");
+  src: url("/src/static/fonts/inria-sans.light.ttf") format("truetype");
   font-weight: lighter;
   font-style: normal;
   font-display: swap;
@@ -47,7 +47,7 @@ body {
 
 @font-face {
   font-family: "Inria Sans Regular Local";
-  src: url("/static/fonts/inria-sans.regular.ttf") format("truetype");
+  src: url("/src/static/fonts/inria-sans.regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -55,19 +55,19 @@ body {
 
 @font-face {
   font-family: "Karantina-Regular";
-  src: url("/static/fonts/Karantina-Regular.ttf") format("truetype");
+  src: url("/src/static/fonts/Karantina-Regular.ttf") format("truetype");
   font-display: swap;
 }
 
 @font-face {
   font-family: "Karantina-Bold";
-  src: url("/static/fonts/Karantina-Bold.ttf") format("truetype");
+  src: url("/src/static/fonts/Karantina-Bold.ttf") format("truetype");
   font-display: swap;
 }
 
 @font-face {
   font-family: "Nexa-Heavy";
-  src: url("/static/fonts/Nexa-Heavy.ttf") format("truetype");
+  src: url("/src/static/fonts/Nexa-Heavy.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -87,8 +87,8 @@ header {
   transform: translateX(-50%);
   z-index: 1000;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 header.scrolled {
@@ -408,8 +408,8 @@ nav ul li a:hover {
   background: rgba(217, 217, 217, 0.1);
   border-radius: clamp(20px, 4vw, 40px);
   border: 1.5px solid #ffffff;
-  backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
   padding: clamp(24px, 4vw, 32px);
   width: min(90vw, 420px);
   box-shadow: 
@@ -896,6 +896,7 @@ nav ul li a:hover {
   border-radius: 8px;
   transition: all 0.3s ease;
   background: rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   white-space: nowrap;
 }
@@ -930,6 +931,7 @@ nav ul li a:hover {
   z-index: 9999;
   align-items: center;
   justify-content: center;
+  -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   animation: fadeIn 0.3s ease-out;
 }
@@ -1128,6 +1130,7 @@ nav ul li a:hover {
     width: 100%;
     height: 100vh;
     background: rgba(64, 47, 38, 0.98);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     transform: translateX(-100%);
     opacity: 0;
@@ -1328,8 +1331,8 @@ nav ul li a:hover {
 /* ===== TOUCH GESTURES SUPPORT ===== */
 .swipeable {
   touch-action: pan-y;
-  user-select: none;
   -webkit-user-select: none;
+  user-select: none;
 }
 
 .swipeable.swiping {

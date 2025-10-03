@@ -3,9 +3,9 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aquanox - Controle de Irrigação Inteligente</title>
-  <link rel="stylesheet" href="static/css/styleinicial.css">
+  <link rel="stylesheet" href="/src/static/css/styleinicial.css">
   <script>
     // Bloqueia zoom por teclado e gestos
     document.addEventListener('keydown', function (e) {
@@ -31,7 +31,7 @@
 <body>
   <header>
     <div class="header-content">
-      <img src="static/img/logo.png" alt="Aquanox Logo" class="logo">
+      <img src="/src/static/img/logo.png" alt="Aquanox Logo" class="logo">
       <nav>
         <ul>
 
@@ -41,13 +41,13 @@
 
         </ul>
       </nav>
-      <img src="static/img/usuario.svg" alt="Usuário" class="user-icon"> <!-- Adiciona a imagem do usuário -->
+      <img src="/src/static/img/usuario.svg" alt="Usuário" class="user-icon"> <!-- Adiciona a imagem do usuário -->
     </div>
   </header>
 
   <div class="banner-container">
     <div class="rectangle-2"></div>
-    <img src="static/img/fundo.png" alt="Banner Aquanox" class="banner-image" fetchpriority="high">
+  <img src="/src/static/img/fundo.png" alt="Banner Aquanox" class="banner-image">
 
     <!-- Left text box -->
     <div class="text-overlay left">
@@ -55,16 +55,18 @@
 
       <!-- Caixa de texto solicitada -->
       <div class="descricao-inria">
-        <span class="inria-bold">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
+        <span class="inria-bold">Apresentamos um sistema inovador que automatiza o controle da irrigação, aplicando exatamente a quantidade de água que sua plantação precisa. Com suporte para desktop, web e dispositivos móveis, você acompanha e gerencia a irrigação de qualquer lugar, de forma simples e prática.</span>
         <span class="inria-regular">
-          Sed ut dui est. Nulla hendrerit cursus elit, ut auctor leo vulputate
-          sit amet. Duis eu blandit ante, et aliquet ipsum. Fusce luctus et
-          libero vel vehicula. Suspendisse pellentesque eget sem nec maximus.
+          Nossa estação meteorológica integrada monitora o clima e a umidade do solo em tempo real, fornecendo dados essenciais para que o sistema tome decisões precisas. Isso evita desperdícios de água e energia, garantindo uma rega uniforme e eficiente.
+
+          Com válvulas aspersoras inteligentes, o sistema abre e fecha automaticamente para atender às necessidades específicas da sua plantação, promovendo mais saúde e produtividade para as culturas.
+
+          Desenvolvido com foco em inovação tecnológica, nosso projeto oferece uma solução prática e sustentável para o agricultor moderno.
         </span>
       </div>
 
       <button class="btn-saiba-mais">Saiba mais
-        <img class="maki-arrow" src="static/img/maki-arrow0.svg" alt="saibaMaisSeta" />
+        <img class="maki-arrow" src="/src/static/img/maki-arrow0.svg" alt="saibaMaisSeta" />
       </button>
     </div>
 
@@ -77,7 +79,7 @@
           <input type="text" name="username" placeholder="Nome de Usuário" required>
           <div class="password-container">
             <input type="password" name="password" placeholder="Senha" required>
-            <button type="button" id="togglePassword" class="toggle-password"></button>
+            <button type="button" id="togglePassword" class="toggle-password" title="Mostrar/ocultar senha"></button>
           </div>
           <div class="aux-link">
             <a href="#" id="forgotPasswordLink">Esqueceu sua senha?</a>
@@ -87,7 +89,7 @@
       </div>
 
       <!-- Placeholder para carregar o formulário de recuperação -->
-      <div id="forgotPasswordContainer" style="display: none;"></div>
+  <div id="forgotPasswordContainer" class="hidden"></div>
     </div>
   </div>
 
@@ -111,25 +113,21 @@
     </div>
     <div class="rectangle-8">
       <!-- Imagem de fundo do rectangle-8 -->
-      <img src="static/img/fundo2.png" alt="Irrigação" class="img-irrigacao-rectangle8" />
+      <img src="/src/static/img/fundo2.png" alt="Irrigação" class="img-irrigacao-rectangle8" />
 
       <div class="funcoes-aquanox">FUNÇÕES DO AQUANOX</div>
 
       <div class="rectangle-14">
         <div class="rectangle-14-content">
           <h2>Válvulas</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut dui est. Nulla hendrerit cursus elit, ut
-            auctor leo vulputate sit amet. Duis eu blandit ante, et aliquet ipsum. Fusce luctus et libero vel vehicula.
-            Suspendisse pellentesque eget sem nec maximus.</p>
+          <p>Nosso projeto conta com válvulas que controlam o fluxo de água para a irrigação por gotejamento, as válvulas abrem e fecham automaticamente de acordo com a umidade do solo, ou podem ser abertas e fechadas manualmente, garantindo uma rega mais eficiente, econômica e sustentável.</p>
         </div>
       </div>
 
       <div class="rectangle-14-invertida">
         <div class="rectangle-14-content-invertida">
           <h2>Estação Metereológica</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut dui est. Nulla hendrerit cursus elit, ut
-            auctor leo vulputate sit amet. Duis eu blandit ante, et aliquet ipsum. Fusce luctus et libero vel vehicula.
-            Suspendisse pellentesque eget sem nec maximus.</p>
+          <p>Ela é responsável por recebe as medições do tempo e medir a umidade do solo, essas informações são de suma importância para a abertura e fechamento automático das válvulas, evitando assim desperdícios desnecessários, logo pesando menos no bolso de nosso consumidor.</p>
         </div>
       </div>
     </div>
@@ -143,7 +141,7 @@
       <div class="faq-container">
         <div class="rectangle-162">
           <span class="rectangle-162-text">Como funciona o Aquanox?</span>
-          <img src="static/img/seta.svg" alt="Seta" class="seta" id="abrirExpansivel">
+          <img src="/src/static/img/seta.svg" alt="Seta" class="seta" id="abrirExpansivel">
         </div>
 
         <div class="caixa-expansivel" id="caixaExpansivel">
@@ -157,27 +155,26 @@
     </div>
 
     <div class="rectangle-99">
-      <img src="static/img/aaa.png" alt="AAA" class="img-aaa">
-      <img src="static/img/logo.png" alt="Logo" class="img-logo-below-aaa">
-      <img src="static/img/fundo2.png" alt="Show" class="img-show">
-      <img src="static/img/fim.png" alt="Fim" class="img-fim">
+      <img src="/src/static/img/aaa.png" alt="AAA" class="img-aaa">
+      <img src="/src/static/img/logo.png" alt="Logo" class="img-logo-below-aaa">
+      <img src="/src/static/img/fundo2.png" alt="Show" class="img-show">
+      <img src="/src/static/img/fim.png" alt="Fim" class="img-fim">
     </div>
 
 
     <!-- Modal de confirmação de cadastro -->
-    <div id="cadastroConfirmModal" style="display:none;">
-      <div
-        style="background:#fff; border-radius:16px; padding:40px 32px; min-width:320px; max-width:90vw; margin:120px auto; box-shadow:0 2px 16px #0003; text-align:center;">
-        <h2 style="font-size:2rem; color:#436177; margin-bottom:16px;">Cadastro realizado com sucesso!</h2>
-        <p style="font-size:1.1rem; color:#222; margin-bottom:32px;">Seu cadastro foi concluído. Clique em "Ir para o
+  <div id="cadastroConfirmModal" class="hidden">
+      <div class="modal-content">
+  <h2 class="modal-title">Cadastro realizado com sucesso!</h2>
+  <p class="modal-text">Seu cadastro foi concluído. Clique em "Ir para o painel" para acessar o sistema.</p>
           painel" para acessar o sistema.</p>
-        <button id="btnIrPainel"
+  <button id="btnIrPainel" class="modal-btn">Ir para o painel</button>
           style="background:#73A8CE; color:#fff; font-size:1.1rem; font-family:'Nexa-Heavy',sans-serif; border:none; border-radius:8px; padding:12px 32px; cursor:pointer;">Ir
           para o painel</button>
       </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="/src/static/js/script.js"></script>
     <script>
       // Exemplo: ao clicar em "Entrar", mostra modal de confirmação e redireciona após confirmação
       document.addEventListener('DOMContentLoaded', function () {

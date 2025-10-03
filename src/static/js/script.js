@@ -180,11 +180,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
       passwordInput.setAttribute('type', type);
       
-      const imgSrc = type === 'password' ? 'static/img/olhoa.png' : 'static/img/olhof.png';
+      const imgSrc = type === 'password' ? '/src/static/img/olhoa.png' : '/src/static/img/olhof.png';
       this.style.backgroundImage = `url(${imgSrc})`;
     });
-    
-    togglePassword.style.backgroundImage = 'url(static/img/olhoa.png)';
+    togglePassword.style.backgroundImage = 'url(/src/static/img/olhoa.png)';
   }
 
   // ===== RECTANGLE HOVER ANIMATION =====
