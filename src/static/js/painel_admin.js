@@ -1,43 +1,5 @@
 // Válvulas
 
-// Remover completamente o bloco de código responsável pelo dropdown das válvulas:
-// const container = document.getElementById("valvulasContainer");
-// const exemplo = document.getElementById("valvulasExemplo");
-// const toggle = document.getElementById("valvulasToggle");
-// let expanded = false;
-// if (container && exemplo && toggle) {
-//   const header = container.querySelector(".rectangle-32");
-//   header.onclick = function (e) {
-//     expanded = !expanded;
-//     if (expanded) {
-//       exemplo.style.display = "block";
-//       // Força reflow para garantir transição
-//       void exemplo.offsetWidth;
-//       exemplo.classList.add("show");
-//       toggle.style.transform = "rotate(180deg)";
-//     } else {
-//       // Garante que a transição ocorra mesmo se display já for block
-//       exemplo.classList.remove("show");
-//       toggle.style.transform = "rotate(0deg)";
-//       // Aguarda a transição para esconder
-//       const handler = function (ev) {
-//         if (ev.propertyName === "max-height") {
-//           exemplo.style.display = "none";
-//           exemplo.removeEventListener("transitionend", handler);
-//         }
-//       };
-//       exemplo.addEventListener("transitionend", handler);
-//       // Se a transição não disparar (por algum bug), força o display:none após o tempo da transição
-//       setTimeout(() => {
-//         if (!exemplo.classList.contains("show")) {
-//           exemplo.style.display = "none";
-//         }
-//       }, 130); // ligeiramente maior que o transition do CSS
-//     }
-//     e.stopPropagation();
-//   };
-// }
-
 // Controle das válvulas
 let valvulaCount = 0;
 let valvulas = []; // Lista local de válvulas
@@ -59,9 +21,7 @@ function renderValvulas() {
     box.className = "valvula-box";
     box.id = "valvula" + valvula.id;
     box.innerHTML = `
-      <div class="valvula-label" data-id="${
-        valvula.id
-      }" style="cursor:pointer;">${valvula.nome} (${valvula.serial})</div>
+      <div class="valvula-label" data-id="${valvula.id}" style="cursor:pointer;">${valvula.nome}</div>
       <div class="status" id="statusValvula${valvula.id}">${
       valvula.ativada ? "Ativada" : "Desativada"
     }</div>
@@ -166,7 +126,8 @@ function setupValvula(id) {
 function setupValvulaLabel(label) {
   if (!label) return;
   label.onclick = function (e) {
-    showValvulaActions(label);
+    const valvulaId = label.getAttribute("data-id");
+    showValvulaActionsModal(valvulaId);
     e.stopPropagation();
   };
 }
@@ -196,27 +157,32 @@ function showConfirmModal(msg, onConfirm) {
     modal = document.createElement("div");
     modal.id = "confirmModal";
     modal.innerHTML = `
-      <div class="custom-modal-bg">
-        <div class="custom-modal-content">
-          <div class="custom-modal-title">Confirmação</div>
-          <div class="custom-modal-msg"></div>
-          <div class="custom-modal-actions">
-            <button class="custom-modal-btn custom-modal-btn-yes">Sim</button>
-            <button class="custom-modal-btn custom-modal-btn-no">Não</button>
-          </div>
+      <div class="custom-modal-content">
+        <div class="custom-modal-title">Confirmação</div>
+        <div class="custom-modal-msg"></div>
+        <div class="custom-modal-actions">
+          <button class="custom-modal-btn custom-modal-btn-yes">Sim</button>
+          <button class="custom-modal-btn custom-modal-btn-no">Não</button>
         </div>
       </div>
     `;
     document.body.appendChild(modal);
   }
   modal.querySelector(".custom-modal-msg").textContent = msg;
-  modal.style.display = "block";
+  modal.style.display = "flex";
   modal.querySelector(".custom-modal-btn-yes").onclick = () => {
     modal.style.display = "none";
     onConfirm();
   };
   modal.querySelector(".custom-modal-btn-no").onclick = () => {
     modal.style.display = "none";
+  };
+  
+  // Fechar ao clicar fora
+  modal.onclick = (e) => {
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
   };
 }
 
@@ -227,25 +193,23 @@ function showAddValvulaModal(onAdd) {
     modal = document.createElement("div");
     modal.id = "addValvulaModal";
     modal.innerHTML = `
-      <div class="custom-modal-bg">
-        <div class="custom-modal-content">
-          <div class="custom-modal-title">Adicionar Válvula</div>
-          <div style="width:100%;margin-bottom:16px;">
-            <label style="font-family:'Nexa-Heavy',sans-serif;font-size:16px;display:block;margin-bottom:6px;">Nome</label>
-            <input id="addValvulaNome" type="text" style="width:100%;padding:8px 12px;font-size:16px;border-radius:6px;border:1px solid #bbb;margin-bottom:12px;">
-            <label style="font-family:'Nexa-Heavy',sans-serif;font-size:16px;display:block;margin-bottom:6px;">localização</label>
-            <input id="addValvulaSerial" type="text" style="width:100%;padding:8px 12px;font-size:16px;border-radius:6px;border:1px solid #bbb;">
-          </div>
-          <div class="custom-modal-actions">
-            <button class="custom-modal-btn custom-modal-btn-yes" id="addValvulaConfirm">Adicionar</button>
-            <button class="custom-modal-btn custom-modal-btn-no" id="addValvulaCancel">Cancelar</button>
-          </div>
+      <div class="custom-modal-content">
+        <div class="custom-modal-title">Adicionar Válvula</div>
+        <div style="width:100%;margin-bottom:16px;">
+          <label>Nome</label>
+          <input id="addValvulaNome" type="text">
+          <label>Localização</label>
+          <input id="addValvulaSerial" type="text">
+        </div>
+        <div class="custom-modal-actions">
+          <button class="custom-modal-btn custom-modal-btn-yes" id="addValvulaConfirm">Adicionar</button>
+          <button class="custom-modal-btn custom-modal-btn-no" id="addValvulaCancel">Cancelar</button>
         </div>
       </div>
     `;
     document.body.appendChild(modal);
   }
-  modal.style.display = "block";
+  modal.style.display = "flex";
   const nomeInput = modal.querySelector("#addValvulaNome");
   const serialInput = modal.querySelector("#addValvulaSerial");
   nomeInput.value = "";
@@ -265,39 +229,43 @@ function showAddValvulaModal(onAdd) {
   modal.querySelector("#addValvulaCancel").onclick = () => {
     modal.style.display = "none";
   };
+  
+  // Fechar ao clicar fora
+  modal.onclick = (e) => {
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
+  };
 }
 
 // Modal para editar válvula
-function showEditValvulaModal(box, label) {
+function showEditValvulaModal(valvulaId) {
   let modal = document.getElementById("editValvulaModal");
   if (!modal) {
     modal = document.createElement("div");
     modal.id = "editValvulaModal";
     modal.innerHTML = `
-      <div class="custom-modal-bg">
-        <div class="custom-modal-content">
-          <div class="custom-modal-title">Editar Válvula</div>
-          <div style="width:100%;margin-bottom:16px;">
-            <label style="font-family:'Nexa-Heavy',sans-serif;font-size:16px;display:block;margin-bottom:6px;">Nome</label>
-            <input id="editValvulaNome" type="text" style="width:100%;padding:8px 12px;font-size:16px;border-radius:6px;border:1px solid #bbb;margin-bottom:12px;">
-            <label style="font-family:'Nexa-Heavy',sans-serif;font-size:16px;display:block;margin-bottom:6px;">Número Serial</label>
-            <input id="editValvulaSerial" type="text" style="width:100%;padding:8px 12px;font-size:16px;border-radius:6px;border:1px solid #bbb;">
-          </div>
-          <div class="custom-modal-actions">
-            <button class="custom-modal-btn custom-modal-btn-yes" id="editValvulaConfirm">Salvar</button>
-            <button class="custom-modal-btn custom-modal-btn-no" id="editValvulaCancel">Cancelar</button>
-          </div>
+      <div class="custom-modal-content">
+        <div class="custom-modal-title">Editar Válvula</div>
+        <div style="width:100%;margin-bottom:16px;">
+          <label>Nome</label>
+          <input id="editValvulaNome" type="text">
+          <label>Localização</label>
+          <input id="editValvulaSerial" type="text">
+        </div>
+        <div class="custom-modal-actions">
+          <button class="custom-modal-btn custom-modal-btn-yes" id="editValvulaConfirm">Salvar</button>
+          <button class="custom-modal-btn custom-modal-btn-no" id="editValvulaCancel">Cancelar</button>
         </div>
       </div>
     `;
     document.body.appendChild(modal);
   }
-  // Busca id da válvula
-  const boxId = box.id.replace("valvula", "");
-  const valvula = valvulas.find((v) => v.id === Number(boxId));
+  
+  const valvula = valvulas.find((v) => v.id === Number(valvulaId));
   if (!valvula) return;
 
-  modal.style.display = "block";
+  modal.style.display = "flex";
   const nomeInput = modal.querySelector("#editValvulaNome");
   const serialInput = modal.querySelector("#editValvulaSerial");
   nomeInput.value = valvula.nome;
@@ -319,195 +287,80 @@ function showEditValvulaModal(box, label) {
   modal.querySelector("#editValvulaCancel").onclick = () => {
     modal.style.display = "none";
   };
-}
-
-// Modal para editar válvula (versão simplificada)
-function showValvulaEdit(box, label) {
-  // Oculta todas as outras válvulas
-  document.querySelectorAll(".valvula-box").forEach((b) => {
-    if (b !== box) b.style.display = "none";
-    else b.style.display = "";
-  });
-
-  // Cria container para label + botões
-  const nomeAtual = label.textContent;
-  const editContainer = document.createElement("div");
-  editContainer.className = "valvula-edit-label";
-  editContainer.style.display = "flex";
-  editContainer.style.alignItems = "center";
-  editContainer.style.width = "100%";
-
-  // Input menor
-  const input = document.createElement("input");
-  input.type = "text";
-  input.value = nomeAtual;
-  input.className = "valvula-edit-input";
-  input.style.fontSize = "22px"; // Reduzido
-  input.style.fontFamily = "Nexa-Heavy,sans-serif";
-  input.style.fontWeight = "700";
-  input.style.marginBottom = "8px"; // Reduzido
-  input.style.width = "100%";
-  input.style.textAlign = "center";
-  input.style.background = "none";
-  input.style.border = "none";
-  input.style.outline = "none";
-
-  // Botão salvar (ícone)
-  const saveBtn = document.createElement("button");
-  saveBtn.className = "icon-btn save-btn";
-  saveBtn.title = "Salvar";
-  saveBtn.style.marginLeft = "8px";
-  saveBtn.innerHTML = `<img src="/src/static/img/edit-outline.svg" alt="Salvar" style="width:22px;height:22px;">`;
-
-  // Botão cancelar (ícone)
-  const cancelBtn = document.createElement("button");
-  cancelBtn.className = "icon-btn cancel-btn";
-  cancelBtn.title = "Cancelar";
-  cancelBtn.style.marginLeft = "4px";
-  cancelBtn.innerHTML = `<img src="/src/static/img/close.svg" alt="Cancelar" style="width:22px;height:22px;">`;
-
-  // Substitui label
-  label.style.display = "none";
-  editContainer.appendChild(input);
-  editContainer.appendChild(saveBtn);
-  editContainer.appendChild(cancelBtn);
-  label.parentNode.insertBefore(editContainer, label);
-
-  // Foco no input
-  input.focus();
-  input.select();
-
-  saveBtn.onclick = function () {
-    const novoNome = input.value.trim();
-    if (novoNome === "") {
-      showConfirmModal("Deseja realmente excluir esta válvula?", () => {
-        box.remove();
-        updateValvulasLayout();
-        // Após excluir, restaura visualização das válvulas
-        document
-          .querySelectorAll(".valvula-box")
-          .forEach((b) => (b.style.display = ""));
-      });
-      return;
+  
+  // Fechar ao clicar fora
+  modal.onclick = (e) => {
+    if (e.target === modal) {
+      modal.style.display = "none";
     }
-    label.textContent = novoNome;
-    cleanup();
-    updateValvulasLayout();
-    // Após editar, restaura visualização das válvulas
-    document
-      .querySelectorAll(".valvula-box")
-      .forEach((b) => (b.style.display = ""));
-  };
-  cancelBtn.onclick = function () {
-    cleanup();
-    // Após cancelar, restaura visualização das válvulas
-    document
-      .querySelectorAll(".valvula-box")
-      .forEach((b) => (b.style.display = ""));
-  };
-  function cleanup() {
-    editContainer.remove();
-    label.style.display = "";
-  }
-}
-
-// Inicializar labels existentes
-function setupValvulaLabel(label) {
-  if (!label) return;
-  label.onclick = function (e) {
-    showValvulaActions(label);
-    e.stopPropagation();
   };
 }
-document.querySelectorAll(".valvula-label").forEach(setupValvulaLabel);
 
-// Atualiza layout das válvulas (rolagem e linhas de 5)
-function updateValvulasLayout() {
-  const assets = document.getElementById("valvulasAssets");
-  if (!assets) return;
-  // Remove agrupamentos antigos
-  Array.from(assets.querySelectorAll(".valvulas-row")).forEach((r) =>
-    r.remove()
-  );
-  // Seleciona todas as válvulas (exclui o botão de adicionar)
-  const boxes = Array.from(assets.querySelectorAll(".valvula-box"));
-  // Remove todas do assets
-  boxes.forEach((b) => assets.removeChild(b));
-  // Agrupa em linhas de 5
-  let rows = [];
-  for (let i = 0; i < boxes.length; i += 5) {
-    const row = document.createElement("div");
-    row.className = "valvulas-row";
-    row.style.display = "flex";
-    row.style.flexDirection = "row";
-    row.style.gap = "48px";
-    row.style.marginBottom = "24px";
-    boxes.slice(i, i + 5).forEach((b) => row.appendChild(b));
-    rows.push(row);
-  }
-  // Insere as linhas antes do botão de adicionar
-  rows.forEach((r) => assets.appendChild(r));
-  // Reatribui eventos para cada válvula
-  boxes.forEach((b) => {
-    const id = b.id.replace("valvula", "");
-    setupValvula(id);
-    setupValvulaLabel(b.querySelector(".valvula-label"));
-  });
-}
-updateValvulasLayout();
-
-// Funções de editar/excluir válvula
-function showValvulaActions(label) {
-  // Remove qualquer menu de ação anterior
-  document.querySelectorAll(".valvula-actions-menu").forEach((e) => e.remove());
-  const box = label.closest(".valvula-box");
-  if (!box) return;
-  document
-    .querySelectorAll(".valvula-box")
-    .forEach((b) => (b.style.display = ""));
-
-  // Cria menu de ações alinhado nas extremidades
-  const menu = document.createElement("div");
-  menu.className = "valvula-actions-menu";
-  menu.innerHTML = `
-    <div class="edit rectangle-36" style="cursor:pointer; left:0;">
-      <div class="mingcute-edit-line">
-        <img class="group" src="/src/static/img/edit-outline.svg" alt="editar"/>
+// Nova modal de ações da válvula (ao clicar no nome)
+function showValvulaActionsModal(valvulaId) {
+  let modal = document.getElementById("valvulaActionsModal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "valvulaActionsModal";
+    modal.innerHTML = `
+      <div class="custom-modal-content">
+        <div class="custom-modal-title">Informações da Válvula</div>
+        <div class="valvula-info" id="valvulaInfoContent">
+        </div>
+        <div class="custom-modal-actions">
+          <button class="custom-modal-btn custom-modal-btn-yes" id="valvulaEditBtn">Editar</button>
+          <button class="custom-modal-btn custom-modal-btn-delete" id="valvulaDeleteBtn">Excluir</button>
+          <button class="custom-modal-btn custom-modal-btn-no" id="valvulaCloseBtn">Fechar</button>
+        </div>
       </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  const valvula = valvulas.find((v) => v.id === Number(valvulaId));
+  if (!valvula) return;
+
+  const infoContent = modal.querySelector("#valvulaInfoContent");
+  infoContent.innerHTML = `
+    <div class="valvula-info-item">
+      <span class="valvula-info-label">Nome:</span>
+      <span class="valvula-info-value">${valvula.nome}</span>
     </div>
-    <div class="delete rectangle-37" style="cursor:pointer; right:0;">
-      <img class="material-symbols-delete-outline" src="/src/static/img/delete-outline.svg" alt="excluir"/>
+    <div class="valvula-info-item">
+      <span class="valvula-info-label">Localização:</span>
+      <span class="valvula-info-value">${valvula.serial}</span>
+    </div>
+    <div class="valvula-info-item">
+      <span class="valvula-info-label">Status:</span>
+      <span class="valvula-info-value">${valvula.ativada ? "Ativada" : "Desativada"}</span>
     </div>
   `;
-  box.appendChild(menu);
 
-  menu.querySelector(".edit").onclick = function (e) {
-    menu.remove();
-    showEditValvulaModal(box, label);
-    e.stopPropagation();
+  modal.style.display = "flex";
+
+  modal.querySelector("#valvulaEditBtn").onclick = () => {
+    modal.style.display = "none";
+    showEditValvulaModal(valvulaId);
   };
-  menu.querySelector(".delete").onclick = function (e) {
+
+  modal.querySelector("#valvulaDeleteBtn").onclick = () => {
+    modal.style.display = "none";
     showConfirmModal("Deseja realmente excluir esta válvula?", () => {
-      // Remove da lista local
-      const boxId = box.id.replace("valvula", "");
-      valvulas = valvulas.filter((v) => v.id !== Number(boxId));
+      valvulas = valvulas.filter((v) => v.id !== Number(valvulaId));
       renderValvulas();
-      document
-        .querySelectorAll(".valvula-box")
-        .forEach((b) => (b.style.display = ""));
     });
-    menu.remove();
-    e.stopPropagation();
   };
 
-  setTimeout(() => {
-    document.addEventListener("mousedown", function handler(ev) {
-      if (!menu.contains(ev.target)) {
-        menu.remove();
-        document.removeEventListener("mousedown", handler);
-      }
-    });
-  }, 10);
+  modal.querySelector("#valvulaCloseBtn").onclick = () => {
+    modal.style.display = "none";
+  };
+  
+  // Fechar ao clicar fora
+  modal.onclick = (e) => {
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
+  };
 }
 
 // Inicialização: se houver válvulas no HTML, adiciona à lista local
@@ -783,28 +636,6 @@ function updateWeatherMain() {
   document.getElementById("weatherRain").textContent = climaAtual.chuva + "%";
 }
 
-// Remova o helper showWeatherCardsImmediate e ajuste o toggle para não ocultar/mostrar os cards manualmente
-const header = estacaoContainer.querySelector(".rectangle-32");
-header.onclick = function (e) {
-  estacaoExpanded = !estacaoExpanded;
-  if (estacaoExpanded) {
-    estacaoExemplo.style.display = "block";
-    void estacaoExemplo.offsetWidth;
-    estacaoExemplo.classList.add("show");
-    estacaoToggle.style.transform = "rotate(180deg)";
-  } else {
-    estacaoExemplo.classList.remove("show");
-    estacaoToggle.style.transform = "rotate(0deg)";
-    estacaoExemplo.addEventListener("transitionend", function handler(ev) {
-      if (ev.propertyName === "max-height") {
-        estacaoExemplo.style.display = "none";
-        estacaoExemplo.removeEventListener("transitionend", handler);
-      }
-    });
-  }
-  e.stopPropagation();
-};
-
 // Função auxiliar para retornar os dados das abas umidade, vento, chuva
 function getCardsByTab(period, tab) {
   const data = weatherCardsData[period] || [];
@@ -872,41 +703,38 @@ function renderWeatherCards(period, tab) {
   cards.innerHTML = "";
   if (tab === "visao") {
     if (period === "24h") {
-      // Um card por hora, mostrando temperatura daquele horário
       (weatherCardsData["24h"] || []).forEach((item) => {
         const card = document.createElement("div");
         card.className = "weather-card";
         card.innerHTML = `
-            <div class="weather-card-title">${item.title}</div>
-            <div class="weather-card-temp">${item.temp}°C</div>
-            <div class="weather-card-minmax">min ${item.min}°C<br>max ${item.max}°C</div>
-          `;
+          <div class="weather-card-title">${item.title}</div>
+          <div class="weather-card-temp">${item.temp}°C</div>
+          <div class="weather-card-minmax">min ${item.min}°C<br>max ${item.max}°C</div>
+        `;
         cards.appendChild(card);
       });
     } else {
-      // Um card por dia, mostrando média, min, max daquele dia
       (weatherCardsData[period] || []).forEach((item) => {
         const card = document.createElement("div");
         card.className = "weather-card";
         card.innerHTML = `
-            <div class="weather-card-title">${item.title}</div>
-            <div class="weather-card-temp">${item.temp}°C</div>
-            <div class="weather-card-minmax">min ${item.min}°C<br>max ${item.max}°C</div>
-          `;
+          <div class="weather-card-title">${item.title}</div>
+          <div class="weather-card-temp">${item.temp}°C</div>
+          <div class="weather-card-minmax">min ${item.min}°C<br>max ${item.max}°C</div>
+        `;
         cards.appendChild(card);
       });
     }
   } else {
-    // Umidade, Vento, Chuva: mostra cards por hora/dia
     const data = getCardsByTab(period, tab);
     data.forEach((item) => {
       const div = document.createElement("div");
       div.className = "weather-card";
       div.innerHTML = `
-          <div class="weather-card-title">${item.title}</div>
-          <div class="weather-card-temp">${item.value}</div>
-          <div class="weather-card-desc">${item.label}</div>
-        `;
+        <div class="weather-card-title">${item.title}</div>
+        <div class="weather-card-temp">${item.value}</div>
+        <div class="weather-card-desc">${item.label}</div>
+      `;
       cards.appendChild(div);
     });
   }
@@ -932,21 +760,6 @@ if (weatherPeriod) {
 }
 
 // Abas
-document.querySelectorAll(".weather-tab").forEach((btn) => {
-  btn.addEventListener("click", function (e) {
-    document
-      .querySelectorAll(".weather-tab")
-      .forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
-    currentTab = btn.getAttribute("data-tab");
-    updateWeatherCards();
-    e.stopPropagation();
-  });
-});
-
-// Inicializa
-updateWeatherCards();
-renderValvulas();
 document.querySelectorAll(".weather-tab").forEach((btn) => {
   btn.addEventListener("click", function (e) {
     document
