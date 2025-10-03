@@ -791,9 +791,10 @@
     height: 80px;
   }
   .logo {
-    width: 100px;
-    right: 10px;
-    top: -12px;
+    width: 120px;
+    right: 9px;
+    top: -10px;
+    height: 100px;
   }
   .app {
     padding-top: 90px;
@@ -803,8 +804,9 @@
     top: 10px;
   }
   .codicon-account {
-    width: 35px;
-    height: 35px;
+    width: 60px;
+    height: 60px;
+    left: 20px;
   }
   .ol-usu-rio {
     font-size: 18px;
