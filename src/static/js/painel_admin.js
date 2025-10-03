@@ -812,3 +812,46 @@ document.querySelectorAll(".weather-tab").forEach((btn) => {
 // Inicializa
 updateWeatherCards();
 renderValvulas();
+
+// Menu do usuário
+const accountIcon = document.querySelector('.codicon-account');
+let userMenu = null;
+
+if (accountIcon) {
+  accountIcon.addEventListener('click', function(e) {
+    e.stopPropagation();
+    
+    // Se o menu já existe, remove
+    if (userMenu && userMenu.style.display === 'block') {
+      userMenu.style.display = 'none';
+      return;
+    }
+    
+    // Cria o menu se não existir
+    if (!userMenu) {
+      userMenu = document.createElement('div');
+      userMenu.className = 'user-menu';
+      userMenu.innerHTML = `
+        <div class="user-menu-item" id="voltarInicio">
+          ← Voltar para a página inicial
+        </div>
+      `;
+      document.body.appendChild(userMenu);
+      
+      // Adiciona evento de clique no item
+      document.getElementById('voltarInicio').addEventListener('click', function() {
+        window.location.href = '/';
+      });
+    }
+    
+    // Mostra o menu
+    userMenu.style.display = 'block';
+  });
+  
+  // Fecha o menu ao clicar fora
+  document.addEventListener('click', function(e) {
+    if (userMenu && !userMenu.contains(e.target) && e.target !== accountIcon) {
+      userMenu.style.display = 'none';
+    }
+  });
+}
