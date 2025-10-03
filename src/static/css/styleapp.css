@@ -32,7 +32,7 @@
 
 /* Container principal */
 .app {
-  background: #7fc0f5;
+   background: #7fc0f5;
   background: linear-gradient(178deg, rgba(127, 192, 245, 1) 0%, rgba(90, 174, 242, 1) 50%, rgba(28, 129, 212, 1) 100%);
   min-height: 100vh;
   position: relative;
@@ -87,7 +87,6 @@
 .codicon-account {
   width: clamp(40px, 6vw, 70px);
   height: clamp(40px, 6vw, 70px);
-  background: #FFFFFF;
   border-radius: 50%;
   padding: 8px;
 }
@@ -108,7 +107,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: clamp(80px, 12vw, 50px);
+  margin-top: clamp(80px, 45px);
   margin-bottom: clamp(30px, 4vw, 50px);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 51, 102, 0.3);
@@ -216,7 +215,6 @@
   word-break: break-word;
   transition: box-shadow 0.2s, transform 0.2s;
   border: 2px solid rgba(0, 119, 204, 0.2);
- 
 }
 
 .valvula-box:hover {
@@ -251,7 +249,6 @@
   height: clamp(60px, 10vw, 90px);
   margin: 10px 0;
   transition: opacity 0.3s ease-in-out;
-
 }
 
 .mdi-valve-open {
@@ -273,7 +270,6 @@
   min-height: 18px;
   font-weight: 600;
   margin-top: -15px;
-
 }
 
 .status.ativada {
@@ -640,21 +636,26 @@
 
 .valvula-info-item {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
+  flex-direction: column;
+  margin-bottom: 12px;
   font-family: "Nexa-Heavy", sans-serif;
+  gap: 4px;
 }
 
 .valvula-info-label {
   color: #003366;
   font-weight: 600;
-  font-size: clamp(14px, 2vw, 16px);
+  font-size: clamp(13px, 2vw, 15px);
 }
 
 .valvula-info-value {
   color: #0077CC;
   font-weight: 700;
   font-size: clamp(14px, 2vw, 16px);
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 /* Botão adicionar válvula estilizado */
@@ -664,7 +665,7 @@
   font-size: clamp(14px, 2vw, 16px);
   font-weight: 700;
   cursor: pointer;
-  background:#4CAF50;
+  background: #4CAF50;
   border-radius: 10px;
   padding: clamp(10px, 2vw, 14px) clamp(28px, 4vw, 40px);
   display: inline-flex;
@@ -679,7 +680,7 @@
 
 .adicionar-valvula:hover,
 .adicionar-valvula:focus {
-  background:#388E3C;
+  background: #388E3C;
   transform: translateY(-2px) scale(1.04);
   box-shadow: 0 6px 20px rgba(0, 119, 204, 0.4);
   outline: none;
@@ -758,7 +759,7 @@
     max-width: 150px;
     flex: 1 1 120px;
     min-height: 180px;
-    padding: 20px;
+    padding: 10px;
   }
   .rectangle-32 {
     min-height: 50px;
@@ -786,15 +787,15 @@
 /* Mobile pequeno */
 @media (max-width: 480px) {
   .logo-bar {
-    height: 90px;
+    height: 80px;
   }
   .logo {
-    width: 80px;
+    width: 100px;
     right: 10px;
-    top: -8px;
+    top: -12px;
   }
   .app {
-    padding-top: 100px;
+    padding-top: 90px;
   }
   .frame-3 {
     left: 10px;
@@ -808,46 +809,53 @@
     font-size: 18px;
   }
   .frame-5 {
-    margin-top: 80px;
+    margin-top: 70px;
     padding: 10px;
   }
   .funcoes {
     font-size: 28px;
   }
   .assets {
-    gap: 8px;
+    gap: 10px;
     padding-top: 30px;
   }
   .valvula-box {
-    min-width: 90px;
-    max-width: 120px;
-    flex: 1 1 90px;
-    min-height: 110px;
-    padding: 8px;
+    min-width: 140px;
+    max-width: 160px;
+    flex: 1 1 140px;
+    min-height: 200px;
+    padding: 12px;
   }
   .valvula-label {
-    font-size: 13px;
+    font-size: 14px;
+    padding: 6px;
+    margin-bottom: 12px;
   }
-  .mdi-valve {
-    width: 60px;
-    height: 60px;
+  .valvula-box img {
+    width: 70px;
+    height: 70px;
+    top: 32%;
+  }
+  .status {
+    font-size: 13px;
+    margin-top: -10px;
   }
   .toggle-btn {
-    font-size: 11px;
-    padding: 5px 10px;
-    min-width: 70px;
+    font-size: 12px;
+    padding: 6px 12px;
+    min-width: 80px;
   }
   .adicionar-valvula {
-    font-size: 12px;
-    padding: 8px 16px;
+    font-size: 13px;
+    padding: 10px 20px;
   }
   .rectangle-32 {
-    padding: 8px 12px;
+    padding: 10px 15px;
   }
   .valve-3,
   .estacao-icon {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
   }
   .valvulas,
   .estacao-label {
@@ -871,7 +879,33 @@
     font-size: 22px;
   }
   .custom-modal-btn {
-    font-size: 14px;
-    padding: 8px 16px;
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+}
+
+/* Mobile extra pequeno (< 390px) */
+@media (max-width: 389px) {
+  .logo-bar {
+    height: 70px;
+  }
+  .logo {
+    width: 90px;
+    top: -10px;
+  }
+  .app {
+    padding-top: 80px;
+  }
+  .frame-5 {
+    margin-top: 60px;
+  }
+  .valvula-box {
+    min-width: 130px;
+    max-width: 150px;
+    flex: 1 1 130px;
+    min-height: 190px;
+  }
+  .assets {
+    gap: 8px;
   }
 }

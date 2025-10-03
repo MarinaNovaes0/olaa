@@ -20,8 +20,14 @@ function renderValvulas() {
     const box = document.createElement("div");
     box.className = "valvula-box";
     box.id = "valvula" + valvula.id;
+    
+    // Trunca o nome para 20 caracteres
+    const nomeDisplay = valvula.nome.length > 10 
+      ? valvula.nome.substring(0, 10) + '...' 
+      : valvula.nome;
+    
     box.innerHTML = `
-      <div class="valvula-label" data-id="${valvula.id}" style="cursor:pointer;">${valvula.nome}</div>
+      <div class="valvula-label" data-id="${valvula.id}" style="cursor:pointer;">${nomeDisplay}</div>
       <div class="status" id="statusValvula${valvula.id}">${
       valvula.ativada ? "Ativada" : "Desativada"
     }</div>
@@ -151,7 +157,7 @@ if (adicionarValvula && valvulasAssets) {
 }
 
 // Modal de confirmação customizada
-function showConfirmModal(msg, onConfirm) {
+function showConfirmModal(msg, onConfirm, onCancel) {
   let modal = document.getElementById("confirmModal");
   if (!modal) {
     modal = document.createElement("div");
@@ -176,12 +182,14 @@ function showConfirmModal(msg, onConfirm) {
   };
   modal.querySelector(".custom-modal-btn-no").onclick = () => {
     modal.style.display = "none";
+    if (onCancel) onCancel();
   };
   
   // Fechar ao clicar fora
   modal.onclick = (e) => {
     if (e.target === modal) {
       modal.style.display = "none";
+      if (onCancel) onCancel();
     }
   };
 }
@@ -197,9 +205,9 @@ function showAddValvulaModal(onAdd) {
         <div class="custom-modal-title">Adicionar Válvula</div>
         <div style="width:100%;margin-bottom:16px;">
           <label>Nome</label>
-          <input id="addValvulaNome" type="text">
+          <input id="addValvulaNome" type="text" maxlength="50">
           <label>Localização</label>
-          <input id="addValvulaSerial" type="text">
+          <input id="addValvulaSerial" type="text" maxlength="50">
         </div>
         <div class="custom-modal-actions">
           <button class="custom-modal-btn custom-modal-btn-yes" id="addValvulaConfirm">Adicionar</button>
@@ -219,10 +227,19 @@ function showAddValvulaModal(onAdd) {
   modal.querySelector("#addValvulaConfirm").onclick = () => {
     const nome = nomeInput.value.trim();
     const serial = serialInput.value.trim();
+    
+    // Validação
     if (!nome || !serial) {
+      alert("Por favor, preencha todos os campos!");
       nomeInput.focus();
       return;
     }
+    
+    if (nome.length > 50 || serial.length > 50) {
+      alert("Nome e localização devem ter no máximo 50 caracteres!");
+      return;
+    }
+    
     modal.style.display = "none";
     onAdd(nome, serial);
   };
@@ -249,9 +266,9 @@ function showEditValvulaModal(valvulaId) {
         <div class="custom-modal-title">Editar Válvula</div>
         <div style="width:100%;margin-bottom:16px;">
           <label>Nome</label>
-          <input id="editValvulaNome" type="text">
+          <input id="editValvulaNome" type="text" maxlength="50">
           <label>Localização</label>
-          <input id="editValvulaSerial" type="text">
+          <input id="editValvulaSerial" type="text" maxlength="50">
         </div>
         <div class="custom-modal-actions">
           <button class="custom-modal-btn custom-modal-btn-yes" id="editValvulaConfirm">Salvar</button>
@@ -275,23 +292,36 @@ function showEditValvulaModal(valvulaId) {
   modal.querySelector("#editValvulaConfirm").onclick = () => {
     const nome = nomeInput.value.trim();
     const serial = serialInput.value.trim();
+    
+    // Validação
     if (!nome || !serial) {
+      alert("Por favor, preencha todos os campos!");
       nomeInput.focus();
       return;
     }
+    
+    if (nome.length > 50 || serial.length > 50) {
+      alert("Nome e localização devem ter no máximo 50 caracteres!");
+      return;
+    }
+    
     valvula.nome = nome;
     valvula.serial = serial;
     modal.style.display = "none";
     renderValvulas();
   };
+  
   modal.querySelector("#editValvulaCancel").onclick = () => {
     modal.style.display = "none";
+    // Volta para a modal de informações
+    showValvulaActionsModal(valvulaId);
   };
   
-  // Fechar ao clicar fora
+  // Fechar ao clicar fora - volta para modal de informações
   modal.onclick = (e) => {
     if (e.target === modal) {
       modal.style.display = "none";
+      showValvulaActionsModal(valvulaId);
     }
   };
 }
@@ -345,10 +375,17 @@ function showValvulaActionsModal(valvulaId) {
 
   modal.querySelector("#valvulaDeleteBtn").onclick = () => {
     modal.style.display = "none";
-    showConfirmModal("Deseja realmente excluir esta válvula?", () => {
-      valvulas = valvulas.filter((v) => v.id !== Number(valvulaId));
-      renderValvulas();
-    });
+    showConfirmModal(
+      "Deseja realmente excluir esta válvula?", 
+      () => {
+        valvulas = valvulas.filter((v) => v.id !== Number(valvulaId));
+        renderValvulas();
+      },
+      () => {
+        // Callback de cancelamento - volta para modal de informações
+        showValvulaActionsModal(valvulaId);
+      }
+    );
   };
 
   modal.querySelector("#valvulaCloseBtn").onclick = () => {
